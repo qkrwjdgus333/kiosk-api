@@ -1,11 +1,13 @@
 from sqlalchemy import Column, Integer, String
-from app.database import Base, engine
+from sqlalchemy.orm import relationship
+from app.database import Base
+
 
 
 class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String, nullable=False)
 
-Base.metadata.create_all(engine)
+    participants = relationship("Participant", back_populates="user")
