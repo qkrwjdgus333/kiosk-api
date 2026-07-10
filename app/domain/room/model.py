@@ -1,6 +1,9 @@
+import datetime
+
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from app.database import Base, engine
+from app.domain.schedule.model import Schedule
 
 
 class Room(Base):
