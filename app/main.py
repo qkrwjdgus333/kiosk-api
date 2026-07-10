@@ -1,11 +1,18 @@
+from fastapi import FastAPI
 from app.database import Base, engine
 
+from app.domain.schedule.router import router as schedule_router
 
-def print_hi(name):
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+Base.metadata.create_all(bind=engine)
 
+app = FastAPI(
+    title="회의실 예약 키오스크 API",
+    description="Python 3.13 + FastAPI 구현 과제",
+    version="1.0.0"
+)
 
-if __name__ == '__main__':
-    print_hi('PyCharm')
+app.include_router(schedule_router)
 
-Base.metadata.create_all(engine)
+@app.get("/")
+def health_check():
+    return {"status": "ok"}
