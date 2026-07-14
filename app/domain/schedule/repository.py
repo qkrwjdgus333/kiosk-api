@@ -33,6 +33,8 @@ def save_schedule(db: Session, schedule: Schedule) -> Schedule:
     db.refresh(schedule) # DB에서 생성된 ID(PK) 등을 객체에 동기화
     return schedule
 
+def get_schedule_with_details(db: Session, schedule_id: int) -> Schedule | None:
+    return db.query(Schedule).filter(Schedule.id == schedule_id).first()
 
 
 
