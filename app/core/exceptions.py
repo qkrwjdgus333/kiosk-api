@@ -30,3 +30,9 @@ class ScheduleConflictException(BusinessException):
 class ParticipantConflictException(BusinessException):
     def __init__(self, message: str = "초대한 참여자가 다른 회의에 이미 참여중입니다."):
         super().__init__(status_code=409, code="RESERVATION_CONFLICT_PARTICIPANTS", message=message)
+
+
+
+class ScheduleNotFoundException(BusinessException):
+    def __init__(self, message: str = "존재하지 않는 회의를 입력했습니다."):
+        super().__init__(status_code=404, code="INVALID_SCHEDULES_ID", message=message)
