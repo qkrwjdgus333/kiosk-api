@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime
 
@@ -63,3 +65,9 @@ class ParticipantAddResponse(BaseModel):
     participants: list[ParticipantInfo]
 
     model_config = ConfigDict(from_attributes=True)
+
+class ScheduleUpdateRequest(BaseModel):
+    name: Optional[str] = None
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
+    room_id: Optional[int] = None
