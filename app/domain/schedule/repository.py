@@ -37,11 +37,13 @@ def save_schedule(db: Session, schedule: Schedule) -> Schedule:
     return schedule
 
 def get_schedule_with_details(db: Session, schedule_id: int) -> Schedule | None:
-
     return db.query(Schedule).options(
         joinedload(Schedule.room),
         selectinload(Schedule.participants)
     ).filter(Schedule.id == schedule_id).first()
+
+def get_users_by_ids(db: Session, user_ids: list[int]) -> list[User]:
+    return db.query(User).filter(User.id.in_(user_ids)).all()
 
 
 

@@ -5,7 +5,9 @@ from app.domain.schedule.schema import ScheduleCreateRequest, ScheduleUpdateRequ
 from app.domain.schedule import repository
 from app.domain.schedule.model import Schedule
 from app.domain.participant.model import Participant
+
 from app.core.exceptions import *
+
 
 
 def create_schedule(db: Session, request: ScheduleCreateRequest) -> Schedule:
@@ -57,7 +59,6 @@ def create_schedule(db: Session, request: ScheduleCreateRequest) -> Schedule:
     return repository.save_schedule(db, new_schedule)
 
 
-from app.domain.schedule.schema import ScheduleUpdateRequest
 
 
 def update_schedule(db: Session, schedule_id: int, request: ScheduleUpdateRequest) -> Schedule:
@@ -96,4 +97,12 @@ def update_schedule(db: Session, schedule_id: int, request: ScheduleUpdateReques
 
     db.commit()
     db.refresh(schedule)
+
+
+def get_schedule(db: Session, schedule_id: int) -> Schedule:
+    schedule = repository.get_schedule_with_details(db, schedule_id)
+
+    if not schedule:
+        raise ScheduleNotFoundException()
+
     return schedule
