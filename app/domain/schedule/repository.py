@@ -45,5 +45,8 @@ def get_schedule_with_details(db: Session, schedule_id: int) -> Schedule | None:
 def get_users_by_ids(db: Session, user_ids: list[int]) -> list[User]:
     return db.query(User).filter(User.id.in_(user_ids)).all()
 
+def delete_schedule(db: Session, schedule: Schedule) -> None:
+    db.delete(schedule)
+    db.commit()
 
 

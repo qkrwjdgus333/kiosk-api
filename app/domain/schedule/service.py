@@ -106,3 +106,12 @@ def get_schedule(db: Session, schedule_id: int) -> Schedule:
         raise ScheduleNotFoundException()
 
     return schedule
+
+
+def delete_schedule(db: Session, schedule_id: int) -> None:
+    schedule = repository.get_schedule_with_details(db, schedule_id)
+
+    if not schedule:
+        raise ScheduleNotFoundException()
+
+    repository.delete_schedule(db, schedule)
