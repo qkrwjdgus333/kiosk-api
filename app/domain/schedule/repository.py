@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload, selectinload
 from datetime import datetime
 
 from app.domain.schedule.model import Schedule
@@ -9,12 +9,15 @@ from app.domain.participant.model import Participant
 def get_room_by_id(db: Session, room_id: int) -> Room | None:
     return db.query(Room).filter(Room.id == room_id).first()
 
-def get_room_confilicting_schedule(db: Session, room_id: int, start_time: datetime, end_time: datetime) -> list[Schedule]:
-    return db.query(Schedule).filter(
+def get_room_conflicting_schedules(db: Session, room_id: int, start_time: datetime, end_time: datetime, exclude_schedule_id: int = None) -> list[Schedule]:
+    query = db.query(Schedule).filter(
         Schedule.room_id == room_id,
         Schedule.start_time < end_time,
-        Schedule.end_time > start_time,
-    ).all()
+        Schedule.end_time > start_time
+    )
+    if exclude_schedule_id:
+        query = query.filter(Schedule.id != exclude_schedule_id)
+    return query.all()
 
 def get_participant_conflicts(db: Session, user_ids: list[int], start_time: datetime, end_time: datetime) -> list[Participant]:
     return db.query(Participant).filter(
@@ -34,7 +37,13 @@ def save_schedule(db: Session, schedule: Schedule) -> Schedule:
     return schedule
 
 def get_schedule_with_details(db: Session, schedule_id: int) -> Schedule | None:
-    return db.query(Schedule).filter(Schedule.id == schedule_id).first()
+    return db.query(Schedule).options(
+        joinedload(Schedule.room),
+        selectinload(Schedule.participants)
+    ).filter(Schedule.id == schedule_id).first()
+
+def get_users_by_ids(db: Session, user_ids: list[int]) -> list[User]:
+    return db.query(User).filter(User.id.in_(user_ids)).all()
 
 
 
