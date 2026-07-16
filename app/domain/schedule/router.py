@@ -51,3 +51,16 @@ def get_schedule(id: int = Path(..., description="조회하려는 일정의 ID")
                             detail={"code": e.code, "message": e.message}
                             )
 
+
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_schedule(
+    id: int = Path(..., description="삭제할 일정의 ID"),
+    db: Session = Depends(get_db)
+):
+    try:
+        service.delete_schedule(db=db, schedule_id=id)
+    except BusinessException as e:
+        raise HTTPException(
+            status_code=e.status_code,
+            detail={"code": e.code, "message": e.message}
+        )
